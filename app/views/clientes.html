@@ -1,0 +1,185 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="preloader" ng-show="layout.loading">
+            <i class="fa fa-refresh fa-5 fa-spin"></i>
+        </div>
+        <div ng-show="!layout.loading">
+            <div class="row">
+                <div class="col-md-4">
+                    <h1>Clientes</h1>
+                </div>
+                <div class="col-md-8">
+                    <table>
+                        <tr>
+                            <td>
+                                <clock-element></clock-element>
+                            </td>
+                            <td>
+                                <div class="hora-reloj">{{thehour}}</div>
+                                <div class="fecha-reloj">{{theclock}}</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" placeholder="Buscar..." ng-model="buscar" />
+                </div>
+                <div class="col-md-8">
+                    <!-- <button class="btn btn-primary" type="submit" ng-disabled="nuevocliente.$invalid">Cargar nuevo</button> -->
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargarCliente">
+                        Cargar nuevo
+                    </button>
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargarCliente">
+                        Borrar seleccionados
+                    </button>
+                </div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <pre class="hide">{{nuevocliente.nombre | json}}</pre>
+                    <!-- insert form ends -->
+                    <!-- list starts -->
+                    <table class="display" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" name="selec" /></th>
+                                <th data-sortable="true">Nombre y Apellido</th>
+                                <th>Teléfono</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tr ng-repeat="p in clientes | filter: buscar">
+                            <td>&nbsp;</td>
+                            <td>{{p.nombre}} {{p.apellido}}</td>
+                            <td>{{p.telefono}}</td>
+                            <td>
+                                Editar |
+                                <button ng-click="confirmarBorrarCliente(p.id)" data-toggle="modal" data-target="#myModal">
+                                    <i class="fa fa-trash-o"></i>
+                                    Borrar
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- list ends -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div id="cargarCliente" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3>Cargar nuevo cliente</h3>
+            </div>
+            <div class="modal-body">
+                <!-- insert form starts -->
+                <form ng-submit="guardarClientes(nuevocliente)" name="nuevocliente" novalidate />
+                <!-- <form name="nuevocliente" novalidate /> -->
+                    
+                    <!-- nombre -->
+                    <div class="form-group" ng-class="{'has-error': nuevocliente.nombre.$invalid && nuevocliente.$dirty }">
+                        <input type="text" name="nombre" ng-model="no" class="form-control" 
+                            placeholder="Nombre..."  
+                            ng-minlength="3" 
+                            ng-maxlength="50" 
+                            ng-size="100"
+                            required />
+                        <div class="validation text-danger"
+                            ng-messages="nuevocliente.nombre.$error"
+                            ng-if="nuevocliente.nombre.$touched || nuevocliente.$submitted">
+                            <div ng-message="required" ng-show="nuevocliente.nombre.$error.required">Este campo es requerido</div>
+                            <div ng-message="minlength" ng-show="nuevocliente.nombre.$error.minlength">El nombre debe tener al menos 3 caracteres</div>
+                            <div ng-message="maxlength" ng-show="nuevocliente.apellido.$error.maxlength">El apellido debe tener hasta 50 caracteres</div>
+                        </div>
+                    </div>
+                    <!-- apellido -->
+                    <div class="form-group" ng-class="{'has-error': nuevocliente.apellido.$invalid && nuevocliente.$dirty }">
+                        <input type="text" name="apellido" ng-model="ap" class="form-control" 
+                           placeholder="Apellido..."  
+                           ng-minlength="3" 
+                           ng-maxlength="50" 
+                           required />
+                        <div class="validation text-danger"
+                            ng-messages="nuevocliente.apellido.$error"
+                            ng-if="nuevocliente.apellido.$touched || nuevocliente.$submitted">
+                            <div ng-message="required" ng-show="nuevocliente.apellido.$error.required">Este campo es requerido</div>
+                            <div ng-message="minlength" ng-show="nuevocliente.apellido.$error.minlength">El apellido debe tener al menos 3 caracteres</div>
+                            <div ng-message="maxlength" ng-show="nuevocliente.apellido.$error.maxlength">El apellido debe tener hasta 50 caracteres</div>
+                        </div>
+                    </div>
+                    <!-- direccion -->
+                    <div class="form-group" ng-class="{'has-error': nuevocliente.direccion.$invalid && nuevocliente.$dirty }">
+                        <input type="text" name="direccion" ng-model="di" class="form-control" 
+                           placeholder="Dirección..."  
+                           ng-minlength="3" 
+                           ng-maxlength="50" />
+                        <div class="validation text-danger"
+                            ng-messages="nuevocliente.direccion.$error"
+                            ng-if="nuevocliente.direccion.$touched || nuevocliente.$submitted">
+                            <div ng-message="minlength" ng-show="nuevocliente.direccion.$error.minlength">La dirección debe tener al menos 3 caracteres</div>
+                        </div>
+                    </div>
+                    <!-- email -->
+                    <div class="form-group" ng-class="{'has-error': nuevocliente.email.$invalid && nuevocliente.$dirty }">
+                        <input type="email" name="email" ng-model="em" class="form-control" 
+                           placeholder="E-Mail..."  
+                           ng-minlength="3" 
+                           ng-maxlength="50" />
+                        <div class="validation text-danger"
+                            ng-messages="nuevocliente.email.$error"
+                            ng-if="nuevocliente.email.$touched || nuevocliente.$submitted">
+                            <div ng-message="minlength" ng-show="nuevocliente.email.$error.minlength">El email debe tener al menos 3 caracteres</div>
+                            <div ng-message="email" ng-show="nuevocliente.email.$error.email">No es un email valido</div>
+                        </div>
+                    </div>
+                    <!-- telefono -->
+                    <div class="form-group" ng-class="{'has-error': nuevocliente.telefono.$invalid && nuevocliente.$dirty }">
+                        <input type="number" name="telefono" ng-model="te" class="form-control" 
+                           placeholder="Teléfono..."  
+                           ng-minlength="8" 
+                           ng-maxlength="20" />
+                        <div class="validation text-danger"
+                            ng-messages="nuevocliente.telefono.$error"
+                            ng-if="nuevocliente.telefono.$touched || nuevocliente.$submitted">
+                            <div ng-message="minlength" ng-show="nuevocliente.telefono.$error.minlength">El teléfono debe tener al menos 3 caracteres</div>
+                        </div>
+                    </div>
+                </form>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <!-- <button type="submit" class="btn btn-primary" ng-click="guardarClientes(nuevocliente)">Crear cliente</button> -->
+                <input type="submit" class="btn btn-primary" value="Crear cliente"/>
+            </div>
+        </div>
+    </div>
+</div>             
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmar</h4>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea <b>borrar</b> el item? {{idClienteBorrar}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="borrarCliente(idClienteBorrar)">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
