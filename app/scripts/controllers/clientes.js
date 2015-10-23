@@ -18,6 +18,7 @@ angular.module('clientesApp')
                 nombre: clie.nombre.$modelValue,
                 apellido: clie.apellido.$modelValue,
                 direccion: clie.direccion.$modelValue,
+                email: clie.email.$modelValue,
                 telefono: clie.telefono.$modelValue
             };
             debugger;

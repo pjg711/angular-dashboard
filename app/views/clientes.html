@@ -35,6 +35,7 @@
                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargarCliente">
                         Borrar seleccionados
                     </button>
+                    
                 </div>
             </div>
             <div class="row">&nbsp;</div>
@@ -74,19 +75,16 @@
 </div>
 
 
-<!-- Modal -->
+<!-- Modal cargarCliente-->
 <div id="cargarCliente" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3>Cargar nuevo cliente</h3>
-            </div>
-            <div class="modal-body">
-                <!-- insert form starts -->
-                <form ng-submit="guardarClientes(nuevocliente)" name="nuevocliente" novalidate />
-                <!-- <form name="nuevocliente" novalidate /> -->
-                    
+    <form ng-submit="guardarClientes(nuevocliente)" name="nuevocliente" novalidate>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3>Cargar nuevo cliente</h3>
+                </div>
+                <div class="modal-body">
                     <!-- nombre -->
                     <div class="form-group" ng-class="{'has-error': nuevocliente.nombre.$invalid && nuevocliente.$dirty }">
                         <input type="text" name="nombre" ng-model="no" class="form-control" 
@@ -145,7 +143,7 @@
                     </div>
                     <!-- telefono -->
                     <div class="form-group" ng-class="{'has-error': nuevocliente.telefono.$invalid && nuevocliente.$dirty }">
-                        <input type="number" name="telefono" ng-model="te" class="form-control" 
+                        <input type="text" name="telefono" ng-model="te" class="form-control" 
                            placeholder="Teléfono..."  
                            ng-minlength="8" 
                            ng-maxlength="20" />
@@ -155,15 +153,15 @@
                             <div ng-message="minlength" ng-show="nuevocliente.telefono.$error.minlength">El teléfono debe tener al menos 3 caracteres</div>
                         </div>
                     </div>
-                </form>                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <!-- <button type="submit" class="btn btn-primary" ng-click="guardarClientes(nuevocliente)">Crear cliente</button> -->
-                <input type="submit" class="btn btn-primary" value="Crear cliente"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <!-- <button type="submit" class="btn btn-primary" ng-click="guardarClientes(nuevocliente)">Crear cliente</button> -->
+                    <button type="submit" class="btn btn-primary">Crear cliente</button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>             
 
 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
