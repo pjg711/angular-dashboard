@@ -23,11 +23,12 @@ angular.module('clientesApp')
             };
             debugger;
             Clientes.crear(dataCliente).then(function(res){
-                console.log("creado");
+                console.log("Se guardo cliente");
                 $('#cargarCliente').modal('hide');
                 $scope.listarClientes();
             });
         }
+        // funcion para actualizar reloj
         $scope.updateTime = function() {
             $timeout(function(){
                 var date = new Date();
@@ -40,20 +41,26 @@ angular.module('clientesApp')
                 $scope.updateTime();
             },1000);
         }
-
         $scope.idClienteBorrar = '';
-
-        $scope.confirmarBorrarCliente = function(idProv) {
-            $scope.idClienteBorrar = idProv;
+        $scope.confirmarBorrarCliente = function(idCliente) {
+            $scope.idClienteBorrar = idCliente;
         }
-        $scope.borrarCliente = function(idProv) {
-            $http.delete($rootScope.config.service_url+'/clientes/'+idProv)
+        $scope.borrarCliente = function(idCliente) {
+            $http.delete($rootScope.config.service_url+'/clientes/'+idCliente)
             .success(function(res){
-                console.log("creado");
+                console.log("Cliente borrado");
                 $scope.listarClientes();
                 $('#myModal').modal('hide');
             });
 
+        }
+        $scope.borrarSeleccionados = function() {
+            angular.forEach($scope.clientes, function(value){
+                if (value.isselected) console.log("Id seleccionado-->"+value.id);
+            });
+        }
+        $scope.actualizarCliente = function(idCliente) {
+            
         }
         $scope.listarClientes = function(){
             $http.get($rootScope.config.service_url+'/clientes').then(function(res){
@@ -63,6 +70,16 @@ angular.module('clientesApp')
                 console.log("error!");
             });
         }
+        // seleccionar clientes
+        $scope.countChecked = function(){
+            //debugger;
+            var count = 0;
+            angular.forEach($scope.clientes, function(value){
+                if (value.isselected) count++;
+            });
+            return count;
+        }
+        //
         $scope.listarClientes();
         $scope.updateTime();
   });

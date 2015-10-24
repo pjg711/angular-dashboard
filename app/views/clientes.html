@@ -32,10 +32,11 @@
                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargarCliente">
                         Cargar nuevo
                     </button>
-                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargarCliente">
-                        Borrar seleccionados
+                    <button class="btn btn-primary btn-sm" 
+                        ng-disabled="countChecked() == 0" 
+                        ng-click="borrarSeleccionados()"
+                        data-toggle="modal" data-target="#BorrarSeleccionados">Borrar seleccionados
                     </button>
-                    
                 </div>
             </div>
             <div class="row">&nbsp;</div>
@@ -54,12 +55,17 @@
                             </tr>
                         </thead>
                         <tr ng-repeat="p in clientes | filter: buscar">
-                            <td>&nbsp;</td>
+                            <td>
+                                <!-- <input type="checkbox" ng-model="checked"/> -->
+                                <input type="checkbox" ng-model="p.isselected"/>
+                                <!-- <input type="checkbox" ng-model="checkBox.isChecked"> -->
+                                <!-- <input type="checkbox" ng-model="activar" ng-true-valor="{{p.id}}" ng-false-value="0" ng-change="revisar_seleccion()"> -->
+                            </td>
                             <td>{{p.nombre}} {{p.apellido}}</td>
                             <td>{{p.telefono}}</td>
                             <td>
                                 Editar |
-                                <button ng-click="confirmarBorrarCliente(p.id)" data-toggle="modal" data-target="#myModal">
+                                <button ng-click="confirmarBorrarCliente(p.id)" data-toggle="modal" data-target="#BorrarCliente">
                                     <i class="fa fa-trash-o"></i>
                                     Borrar
                                 </button>
@@ -67,13 +73,11 @@
                         </tr>
                     </table>
                     <!-- list ends -->
-
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- Modal cargarCliente-->
 <div id="cargarCliente" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" role="dialog">
@@ -163,8 +167,8 @@
         </div>
     </form>
 </div>             
-
-<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!-- Modal para confirmar borrado de cliente -->
+<div id="BorrarCliente" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -177,6 +181,24 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" ng-click="borrarCliente(idClienteBorrar)">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para confirmar borrado de clientes seleccionados -->
+<div id="BorrarSeleccionados" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmar</h4>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea <b>borrar</b> a todos los seleccionados?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" ng-click="borrarSeleccionados()">Borrar</button>
             </div>
         </div>
     </div>
