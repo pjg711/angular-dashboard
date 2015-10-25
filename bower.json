@@ -12,6 +12,7 @@
     "bootstrap": "~3.2.0",
     "clock-element": "*",
     "es5-shim": "~3.1.0",
+    "font-awesome": "fontawesome#~4.4.0",
     "fontawesome": "~4.4.0",
     "json3": "~3.3.1",
     "metisMenu": "~2.1.0"

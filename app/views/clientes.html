@@ -34,7 +34,6 @@
                     </button>
                     <button class="btn btn-primary btn-sm" 
                         ng-disabled="countChecked() == 0" 
-                        ng-click="borrarSeleccionados()"
                         data-toggle="modal" data-target="#BorrarSeleccionados">Borrar seleccionados
                     </button>
                 </div>
@@ -49,22 +48,83 @@
                         <thead>
                             <tr>
                                 <th><input type="checkbox" name="selec" /></th>
-                                <th data-sortable="true">Nombre y Apellido</th>
+                                <th data-sortable="true">Nombre y Apellido
+                                    <!--<div ng-hide="editarDatos[0]">
+                                        Nombre y Apellido
+                                    </div>
+                                    <div ng-show="editarDatos[0]">
+                                        <table class="nombre-apellido">
+                                            <tr>
+                                                <td>Nombre</td>
+                                                <td>Apellido</td>
+                                            </tr>
+                                        </table>
+                                    </div> -->
+                                </th>
+                                <th>
+                                    <div ng-hide="editarDatos[0]"></div>
+                                    <div ng-show="editarDatos[0]">
+                                        Dirección
+                                    </div>
+                                </th>
                                 <th>Teléfono</th>
                                 <th>Opciones</th>
                             </tr>
                         </thead>
                         <tr ng-repeat="p in clientes | filter: buscar">
-                            <td>
-                                <!-- <input type="checkbox" ng-model="checked"/> -->
+                            <td class="seleccion">
                                 <input type="checkbox" ng-model="p.isselected"/>
-                                <!-- <input type="checkbox" ng-model="checkBox.isChecked"> -->
-                                <!-- <input type="checkbox" ng-model="activar" ng-true-valor="{{p.id}}" ng-false-value="0" ng-change="revisar_seleccion()"> -->
                             </td>
-                            <td>{{p.nombre}} {{p.apellido}}</td>
-                            <td>{{p.telefono}}</td>
                             <td>
-                                Editar |
+                                <div ng-hide="editarDatos[p.id]">{{p.nombre}} {{p.apellido}}</div>
+                                <div ng-show="editarDatos[p.id]">
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="nombre" ng-model="no" class="form-control" 
+                                                    ng-value="p.nombre"
+                                                    ng-minlength="3" 
+                                                    ng-maxlength="50"
+                                                    ng-size="100"
+                                                    required />
+                                            </td>
+                                            <td>
+                                                <input type="text" name="apellido" ng-model="ap" class="form-control" 
+                                                   ng-value="p.apellido"
+                                                   ng-minlength="3" 
+                                                   ng-maxlength="50" 
+                                                   required />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-hide="editarDatos[p.id]"></div>
+                                <div ng-show="editarDatos[p.id]">
+                                    <input type="text" name="direccion" ng-model="di" class="form-control" 
+                                       ng-value="p.direccion"  
+                                       ng-minlength="3" 
+                                       ng-maxlength="50" />
+                                </div>
+                            </td>
+                            <td>
+                                <div ng-hide="editarDatos[p.id]">{{p.telefono}}</div>
+                                <div ng-show="editarDatos[p.id]">
+                                    <input type="text" name="telefono" ng-model="te" class="form-control" 
+                                       ng-value="p.telefono"  
+                                       ng-minlength="8" 
+                                       ng-maxlength="20" />
+                                </div>
+                            <td>
+                                <button ng-hide="editarDatos[p.id]" ng-click="editarCliente(p)">
+                                    <i class="fa fa-pencil"></i>&nbsp;Editar
+                                </button>
+                                <button ng-show="editarDatos[p.id]" ng-click="actualizarCliente(p)">
+                                    <i class="fa fa-floppy-o"></i>&nbsp;Guardar
+                                </button>
+                                <button ng-show="editarDatos[p.id]" ng-click="cancelarCliente(p.id)">
+                                    <i class="fa fa-ban"></i>&nbsp;Cancelar</button>
                                 <button ng-click="confirmarBorrarCliente(p.id)" data-toggle="modal" data-target="#BorrarCliente">
                                     <i class="fa fa-trash-o"></i>
                                     Borrar
@@ -176,7 +236,7 @@
                 <h4 class="modal-title" id="myModalLabel">Confirmar</h4>
             </div>
             <div class="modal-body">
-                ¿Está seguro de que desea <b>borrar</b> el item? {{idClienteBorrar}}
+                ¿Está seguro de que desea <b>borrar</b> el item {{idClienteBorrar}}?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

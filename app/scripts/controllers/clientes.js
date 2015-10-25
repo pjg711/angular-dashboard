@@ -8,11 +8,12 @@
  * Controller of the clientesApp
  */
 angular.module('clientesApp')
-  .controller('ClientesCtrl', function($scope, $http, $rootScope, Clientes, $timeout, dateFilter){
+  .controller('ClientesCtrl', function($scope, $http, $rootScope, Clientes, $timeout, dateFilter, toastr){
         console.log("cargo clientes controller");
         $scope.clientes = [];
+        $scope.editarDatos = [];
         $scope.guardarClientes = function(clie){
-            debugger;
+            //debugger;
             console.log("pase por guardarClientes");
             var dataCliente = {
                 nombre: clie.nombre.$modelValue,
@@ -21,8 +22,9 @@ angular.module('clientesApp')
                 email: clie.email.$modelValue,
                 telefono: clie.telefono.$modelValue
             };
-            debugger;
+            //debugger;
             Clientes.crear(dataCliente).then(function(res){
+                toastr.success('Crear Cliente', 'Se creo que cliente '+dataCliente.nombre);
                 console.log("Se guardo cliente");
                 $('#cargarCliente').modal('hide');
                 $scope.listarClientes();
@@ -59,9 +61,6 @@ angular.module('clientesApp')
                 if (value.isselected) console.log("Id seleccionado-->"+value.id);
             });
         }
-        $scope.actualizarCliente = function(idCliente) {
-            
-        }
         $scope.listarClientes = function(){
             $http.get($rootScope.config.service_url+'/clientes').then(function(res){
                 console.log("success!", res);
@@ -70,7 +69,33 @@ angular.module('clientesApp')
                 console.log("error!");
             });
         }
-        // seleccionar clientes
+        // ------------------------------------------------------------------------------------
+        // edicion de cliente
+	$scope.editarDatos = [];
+        angular.forEach($scope.clientes, function(value){
+            $scope.editarDatos[value.id]=false;
+        })
+	$scope.editarCliente = function(clie) {
+            $scope.editarDatos[clie.id] = true;
+            $scope.editarDatos[0] = true;
+	}
+        
+        $scope.cancelarCliente = function(idCliente) {
+            $scope.editarDatos[idCliente] = false;
+            $scope.editarDatos[0] = false;
+        }
+        $scope.actualizarCliente = function(clie) {
+            var dataCliente = {
+                nombre: clie.nombre.$modelValue,
+                apellido: clie.apellido.$modelValue,
+                direccion: clie.direccion.$modelValue,
+                email: clie.email.$modelValue,
+                telefono: clie.telefono.$modelValue
+            };
+            
+        }
+        // seleccionar clientes para borrar
+        // tomado de http://stackoverflow.com/questions/31066554/how-to-enable-disable-button-when-checkbox-is-checked-in-a-table-using-angularjs
         $scope.countChecked = function(){
             //debugger;
             var count = 0;
