@@ -179,3 +179,12 @@ ul.calc li button {
     width: 250px;
 }
 */
+.alfabeto table {
+    width: 100%;
+    border:2px solid #000;
+    font-weight: bold;
+}
+.alfabeto td {
+    width: 20px;
+    padding: 1em;
+}

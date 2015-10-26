@@ -15,7 +15,8 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'toastr'
+    'toastr',
+    'cfp.hotkeys'
   ])
   .config(function ($routeProvider) {
     $routeProvider
