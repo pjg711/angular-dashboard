@@ -18,11 +18,19 @@ angular.module('clientesApp')
             data: data
         });
     }
-
     // Public API here
     return {
-         crear: function(data){
-             return req('POST', '', data);
-         }
+        listar: function(data){
+            return req('GET', '', data);
+        },
+        crear: function(data){
+            return req('POST', '', data);
+        },
+        actualizar: function(data){
+            return req('PUT','/'+data.id, data);
+        },
+        borrar: function(idCliente){
+            return req('DELETE','/'+idCliente, []);
+        }
     };
   });

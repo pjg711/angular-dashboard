@@ -44,117 +44,125 @@
                     <pre class="hide">{{nuevocliente.nombre | json}}</pre>
                     <!-- insert form ends -->
                     <!-- list starts -->
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <td>&nbsp;</td>
-                                <td>
-                                    <a ng-click="sortType = 'nombre'; sortReverse = !sortReverse">
-                                        Nombre y Apellido
-                                        <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
-                                    </a>
+                    <form ng-submit="editarClientes(editarcliente)" name="editarcliente" novalidate>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <div ng-hide="editarDatos[0]"> <!-- mostrar -->
+                                        <td colspan="2">
+                                            <a ng-click="sortType = 'nombre'; sortReverse = !sortReverse">
+                                                Nombre y Apellido
+                                                <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                                            </a>
+                                        </td>
+                                    </div>
+                                    <div ng-show="editarDatos[0]"><!-- edicion -->
+                                        <td>
+                                            Nombre y Apellido
+                                        </td>
+                                    </div>
+                                    <div ng-show="editarDatos[0]"><!-- edicion -->
+                                        <td>
+                                            Dirección
+                                        </td>
+                                    </div>
+                                    <td>Teléfono</td>
+                                    <td>Opciones</td>
+                                </tr>
+                            </thead>
+                            <tr ng-repeat="p in clientes | orderBy:sortType:sortReverse | filter: buscar">
+                                <td class="seleccion">
+                                    <input type="checkbox" ng-model="p.isselected"/>
                                 </td>
                                 <td>
-                                    <div ng-hide="editarDatos[0]"></div>
-                                    <div ng-show="editarDatos[0]">
-                                        Dirección
+                                    <div ng-hide="editarDatos[p.id]">{{p.nombre}} {{p.apellido}}</div>
+                                    <div ng-show="editarDatos[p.id]">
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" name="nombre" ng-model="no" class="form-control" 
+                                                        ng-value="p.nombre"
+                                                        ng-minlength="3" 
+                                                        ng-maxlength="50"
+                                                        required />
+                                                    <!-- validaciones -->
+                                                    <div role="alert" ng-if="editarcliente.nombre.$touched || editarcliente.$submitted">
+                                                        <span class="error" ng-show="editarcliente.nombre.$error.required">
+                                                            El nombre es requerido!
+                                                        </span>
+                                                        <span class="error" ng-show="editarcliente.nombre.$error.minlength">
+                                                            Nombre demasiado corto!
+                                                        </span>
+                                                        <span class="error" ng-show="editarcliente.nombre.$error.maxlength">
+                                                            Nombre demadiado largo!
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="apellido" ng-model="ap" class="form-control" 
+                                                        ng-value="p.apellido"
+                                                        ng-minlength="3" 
+                                                        ng-maxlength="50" 
+                                                        required />
+                                                    <div role="alert" ng-if="editarcliente.apellido.$touched || editarcliente.$submitted">
+                                                        <span class="error" ng-show="editarcliente.apellido.$error.required">
+                                                            El apellido es requerido!
+                                                        </span>
+                                                        <span class="error" ng-show="editarcliente.apellido.$error.minlength">
+                                                            Apellido demasiado corto!
+                                                        </span>
+                                                        <span class="error" ng-show="editarcliente.apellido.$error.maxlength">
+                                                            Apellido demadiado largo!
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </td>
-                                <td>Teléfono</td>
-                                <td>Opciones</td>
+                                <td>
+                                    <div ng-hide="editarDatos[p.id]"></div>
+                                    <div ng-show="editarDatos[p.id]">
+                                        <input type="text" name="direccion" ng-model="di" class="form-control" 
+                                           ng-value="p.direccion"  
+                                           ng-minlength="3" 
+                                           ng-maxlength="50" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div ng-hide="editarDatos[p.id]">{{p.telefono}}</div>
+                                    <div ng-show="editarDatos[p.id]">
+                                        <input type="text" name="telefono" ng-model="te" class="form-control" 
+                                           ng-value="p.telefono"  
+                                           ng-minlength="8" 
+                                           ng-maxlength="20" />
+                                    </div>
+                                <td>
+                                    <button ng-hide="editarDatos[p.id]" ng-click="editarCliente(p)" title="Editar cliente">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button type="submit" ng-show="editarDatos[p.id]" title="Guardar cliente">
+                                        <i class="fa fa-floppy-o"></i>
+                                    </button>
+                                    <button ng-show="editarDatos[p.id]" ng-click="cancelarCliente(p.id)" title="Cancelar edición">
+                                        <i class="fa fa-ban"></i>
+                                    </button>
+                                    <button ng-click="confirmarBorrarCliente(p.id)" data-toggle="modal" data-target="#BorrarCliente" title="Borrar cliente">
+                                        <i class="fa fa-trash-o"></i>
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tr ng-repeat="p in clientes | orderBy:sortType:sortReverse | filter: buscar">
-                            <td class="seleccion">
-                                <input type="checkbox" ng-model="p.isselected"/>
-                            </td>
-                            <td>
-                                <div ng-hide="editarDatos[p.id]">{{p.nombre}} {{p.apellido}}</div>
-                                <div ng-show="editarDatos[p.id]">
-                                    <table>
-                                        <tr>
-                                            <td>
-                                                <input type="text" name="nombre" ng-model="no" class="form-control" 
-                                                    ng-value="p.nombre"
-                                                    ng-minlength="3" 
-                                                    ng-maxlength="50"
-                                                    required />
-                                                <div role="alert" ng-if="no.$touched || editarcliente.$submitted">
-                                                    <span class="error" ng-show="editarcliente.nombre.$error.required">
-                                                        El nombre es requerido!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.nombre.$error.minlength">
-                                                        Nombre demasiado corto!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.nombre.$error.maxlength">
-                                                        Nombre demadiado largo!
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="apellido" ng-model="ap" class="form-control" 
-                                                    ng-value="p.apellido"
-                                                    ng-minlength="3" 
-                                                    ng-maxlength="50" 
-                                                    required />
-                                                <div role="alert" ng-if="editarcliente.apellido.$touched || editarcliente.$submitted">
-                                                    <span class="error" ng-show="editarcliente.apellido.$error.required">
-                                                        El apellido es requerido!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.apellido.$error.minlength">
-                                                        Apellido demasiado corto!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.apellido.$error.maxlength">
-                                                        Apellido demadiado largo!
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </td>
-                            <td>
-                                <div ng-hide="editarDatos[p.id]"></div>
-                                <div ng-show="editarDatos[p.id]">
-                                    <input type="text" name="direccion" ng-model="di" class="form-control" 
-                                       ng-value="p.direccion"  
-                                       ng-minlength="3" 
-                                       ng-maxlength="50" />
-                                </div>
-                            </td>
-                            <td>
-                                <div ng-hide="editarDatos[p.id]">{{p.telefono}}</div>
-                                <div ng-show="editarDatos[p.id]">
-                                    <input type="text" name="telefono" ng-model="te" class="form-control" 
-                                       ng-value="p.telefono"  
-                                       ng-minlength="8" 
-                                       ng-maxlength="20" />
-                                </div>
-                            </td>
-                            <td>
-                                <button ng-hide="editarDatos[p.id]" ng-click="editarCliente(p)" title="Editar cliente">
-                                    <i class="fa fa-pencil"></i>
-                                </button>
-                                <button ng-show="editarDatos[p.id]" ng-click="actualizarCliente(p)" title="Guardar cliente">
-                                    <i class="fa fa-floppy-o"></i>
-                                </button>
-                                <button ng-show="editarDatos[p.id]" ng-click="cancelarCliente(p.id)" title="Cancelar edición">
-                                    <i class="fa fa-ban"></i>
-                                </button>
-                                <button ng-click="confirmarBorrarCliente(p.id)" data-toggle="modal" data-target="#BorrarCliente" title="Borrar cliente">
-                                    <i class="fa fa-trash-o"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table>
-                    <!-- abecedario -->
-                    <table class="alfabeto">
-                        <tr>
-                            <td ng-repeat="n in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')">
-                                <a ng-click="buscar={nombre:'{{n}}'}">{{n}}</a>
-                            </td>
-                        </tr>
-                    </table>
+                        </table>
+                        <!-- abecedario -->
+                        <table class="alfabeto">
+                            <tr>
+                                <td ng-repeat="n in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')">
+                                    <a ng-click="buscar={nombre:'{{n}}'}">{{n}}</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
                     <!-- list ends -->
                 </div>
             </div>
@@ -304,7 +312,7 @@
                 <h4 class="modal-title" id="myModalLabel">Confirmar</h4>
             </div>
             <div class="modal-body">
-                ¿Está seguro de que desea <b>borrar</b> a todos los clientes seleccionados?
+                ¿Está seguro de que desea <b>borrar</b> a todos los seleccionados?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
