@@ -8,13 +8,58 @@
  * Controller of the clientesApp
  */
 angular.module('clientesApp')
-    .controller('ClientesCtrl', function($scope, $rootScope, Clientes, $timeout, dateFilter, toastr, hotkeys){
+    .controller('ClientesCtrl', function($scope, $rootScope, $http, Clientes, $timeout, dateFilter, toastr, hotkeys){
         console.log("cargo clientes controller");
         $scope.clientes = [];
-        
+        //
+        //$scope.alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+        $scope.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+        //
         $scope.sortType     = 'nombre'; // set the default sort type
         $scope.sortReverse  = false;  // set the default sort order
-        $scope.searchFish   = '';     // set the default search/filter term        
+        $scope.searchFish   = '';     // set the default search/filter term
+        //
+        // cargo datos de ejemplo desde un archivo json
+        $scope.ejemplo = function(){
+            // lo hice asi porque no sabia como implementarlo en factory la carga de un archivo json
+            $http.get('views/ejemplo.json').success(function(data) {
+                //debugger;
+                // debo borrar la base de datos
+                angular.forEach($scope.clientes, function(value){
+                    Clientes.borrar(value.id).then(function(res){
+                        console.log("Cliente con id="+value.id+" en seleccion múltiple borrado");
+                    });
+                });
+                // agrego nuevos
+                $scope.clientes = data;
+                angular.forEach($scope.clientes, function(value){
+                    var dataCliente = {
+                        nombre: value.nombre,
+                        apellido: value.apellido,
+                        direccion: value.direccion,
+                        email: value.email,
+                        telefono: value.telefono
+                    };
+                    Clientes.crear(dataCliente).then(function(res){
+                        console.log("Se creó cliente "+value.nombre+" "+value.apellido);
+                    });
+                });
+                toastr.success('Se cargaron '+$scope.clientes.length+' clientes de ejemplo','Actualizar Cliente');
+            })
+            .error(function (data, status, headers, config) {
+                debugger;
+                console.log("dio error");
+            });
+        }
+        /*
+        $scope.setLetters = function(from, to){
+            $scope.fromLetter = from;
+            $scope.toLetter = to;
+        }
+        */
+        $scope.setLetters = function(letter) {
+            $scope.buscar = letter;
+        }
         // crea un cliente
         $scope.guardarClientes = function(clie){
             console.log("pase por guardarClientes");
@@ -26,42 +71,50 @@ angular.module('clientesApp')
                 telefono: clie.telefono.$modelValue
             };
             Clientes.crear(dataCliente).then(function(res){
-                toastr.success('Se creó el cliente '+clie.nombre.$modelValue,'Crear Cliente');
+                toastr.success('Se creó el cliente '+clie.nombre.$modelValue+' '+clie.apellido.$modelValue,'Crear Cliente');
                 console.log("Se creó cliente");
                 $('#cargarCliente').modal('hide');
                 $scope.listarClientes();
             });
         }
-        $scope.idClienteBorrar = '';
-        $scope.confirmarBorrarCliente = function(idCliente) {
-            $scope.idClienteBorrar = idCliente;
+        // ------------------------------------------------------------------------------------
+        // borrado de un cliente
+        $scope.cliente_borrar = [];
+        $scope.confirmarBorrarCliente = function(clie) {
+            $scope.cliente_borrar = clie;
         }
-        $scope.borrarCliente = function(idCliente) {
-            Clientes.borrar(idCliente).then(function(res){
-                toastr.success('Se borró el cliente con id'+idCliente,'Borrar Cliente');
+        $scope.borrarCliente = function() {
+            debugger;
+            Clientes.borrar($scope.cliente_borrar.id).then(function(res){
+                debugger;
+                toastr.success('Se borró el cliente '+$scope.cliente_borrar.nombre+' '+$scope.cliente_borrar.apellido,'Borrar Cliente');
                 console.log("Cliente borrado");
-                $scope.listarClientes();
                 $('#BorrarCliente').modal('hide');
+                $scope.listarClientes();
             });
         }
         // borrado en la seleccion multiple
         $scope.borrarSeleccionados = function() {
             var borrados = false;
             angular.forEach($scope.clientes, function(value){
+                //debugger;
                 if (value.isselected) {
+                    //debugger;
                     Clientes.borrar(value.id).then(function(res){
-                        console.log("Cliente con id="+value.id+" en seleccion múltiple borrado");
+                        //debugger;
+                        console.log("Cliente "+value.nombre+" "+value.apellido+" en seleccion múltiple borrado");
                         borrados=true;
                     });
                     console.log("Id borrado-->"+value.id);
                 }
             });
-            if(borrados){
-                toastr.success('Se borraron los clientes seleccionados','Borrar Selección');
-                $scope.listarClientes();
+            if(borrados===true){
+                toastr.success('Se borraron todos los clientes seleccionados','Borrar Selección');
                 $('#BorrarSeleccionados').modal('hide');
+                $scope.listarClientes();
             }
         }
+        // ------------------------------------------------------------------------------------
         // listar los clientes
         $scope.listarClientes = function(){
             Clientes.listar().then(function(res){
@@ -100,6 +153,8 @@ angular.module('clientesApp')
             Clientes.actualizar(dataCliente).then(function(res){
                 toastr.success('Se actualizó el cliente '+clie.nombre,'Actualizar Cliente');
                 console.log("Se actualizó cliente");
+                $scope.editarDatos[clie.id]=false;
+                $scope.editarDatos[0]=false;
                 $scope.listarClientes();
             });
         }
@@ -130,10 +185,24 @@ angular.module('clientesApp')
             description: 'Abre modal para la creación de nuevo cliente',
             callback: function() {
                 $('#cargarCliente').modal('show');
-                //console.log("pase por aca");
             }
         });
+        hotkeys.add({
+            combo: 'c',
+            description: 'Abre calculadora',
+            callback: function() {
+                $('#Calculadora').modal('show');
+            }
+        });
+        hotkeys.add({
+            combo: 'l',
+            description: 'Cargo datos json desde archivo',
+            callback: function() {
+                $scope.ejemplo();
+            }
+        });
+        //$('#Calculadora').css('width', '300px');
         //
         $scope.listarClientes();
         $scope.updateTime();
-  });
+    });

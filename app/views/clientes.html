@@ -25,10 +25,9 @@
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="col-md-4">
-                    <input type="text" placeholder="Buscar..." ng-model="buscar" />
+                    <i class="fa fa-search"></i><input type="text" placeholder="Buscar..." ng-model="buscar" />
                 </div>
                 <div class="col-md-8">
-                    <!-- <button class="btn btn-primary" type="submit" ng-disabled="nuevocliente.$invalid">Cargar nuevo</button> -->
                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#cargarCliente">
                         Cargar nuevo
                     </button>
@@ -41,7 +40,7 @@
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="col-md-12">
-                    <pre class="hide">{{nuevocliente.nombre | json}}</pre>
+                    <!-- <pre class="hide">{{nuevocliente.nombre | json}}</pre> -->
                     <!-- insert form ends -->
                     <!-- list starts -->
                     <table class="table table-bordered table-striped">
@@ -51,7 +50,8 @@
                                 <td>
                                     <a ng-click="sortType = 'nombre'; sortReverse = !sortReverse">
                                         Nombre y Apellido
-                                        <span ng-show="sortType == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                                        <span ng-show="sortType == 'nombre' && !sortReverse" class="fa fa-caret-down"></span>
+                                        <span ng-show="sortType == 'nombre' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
                                 </td>
                                 <td>
@@ -60,7 +60,13 @@
                                         Dirección
                                     </div>
                                 </td>
-                                <td>Teléfono</td>
+                                <td>
+                                    <a ng-click="sortType = 'telefono'; sortReverse = !sortReverse">
+                                        Teléfono
+                                        <span ng-show="sortType == 'telefono' && !sortReverse" class="fa fa-caret-down"></span>
+                                        <span ng-show="sortType == 'telefono' && sortReverse" class="fa fa-caret-up"></span>
+                                    </a>
+                                </td>
                                 <td>Opciones</td>
                             </tr>
                         </thead>
@@ -74,12 +80,12 @@
                                     <table>
                                         <tr>
                                             <td>
-                                                <input type="text" name="nombre" ng-model="no" class="form-control" 
+                                                <input type="text" name="nombre" ng-model="p.nombre" class="form-control" 
                                                     ng-value="p.nombre"
                                                     ng-minlength="3" 
                                                     ng-maxlength="50"
                                                     required />
-                                                <div role="alert" ng-if="no.$touched || editarcliente.$submitted">
+                                                <div role="alert" ng-if="p.nombre.$touched || p.$submitted">
                                                     <span class="error" ng-show="editarcliente.nombre.$error.required">
                                                         El nombre es requerido!
                                                     </span>
@@ -92,12 +98,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="apellido" ng-model="ap" class="form-control" 
+                                                <input type="text" name="apellido" ng-model="p.apellido" class="form-control" 
                                                     ng-value="p.apellido"
                                                     ng-minlength="3" 
                                                     ng-maxlength="50" 
                                                     required />
-                                                <div role="alert" ng-if="editarcliente.apellido.$touched || editarcliente.$submitted">
+                                                <div role="alert" ng-if="p.apellido.$touched || p.$submitted">
                                                     <span class="error" ng-show="editarcliente.apellido.$error.required">
                                                         El apellido es requerido!
                                                     </span>
@@ -116,7 +122,7 @@
                             <td>
                                 <div ng-hide="editarDatos[p.id]"></div>
                                 <div ng-show="editarDatos[p.id]">
-                                    <input type="text" name="direccion" ng-model="di" class="form-control" 
+                                    <input type="text" name="direccion" ng-model="p.direccion" class="form-control" 
                                        ng-value="p.direccion"  
                                        ng-minlength="3" 
                                        ng-maxlength="50" />
@@ -125,7 +131,7 @@
                             <td>
                                 <div ng-hide="editarDatos[p.id]">{{p.telefono}}</div>
                                 <div ng-show="editarDatos[p.id]">
-                                    <input type="text" name="telefono" ng-model="te" class="form-control" 
+                                    <input type="text" name="telefono" ng-model="p.telefono" class="form-control" 
                                        ng-value="p.telefono"  
                                        ng-minlength="8" 
                                        ng-maxlength="20" />
@@ -141,17 +147,17 @@
                                 <button ng-show="editarDatos[p.id]" ng-click="cancelarCliente(p.id)" title="Cancelar edición">
                                     <i class="fa fa-ban"></i>
                                 </button>
-                                <button ng-click="confirmarBorrarCliente(p.id)" data-toggle="modal" data-target="#BorrarCliente" title="Borrar cliente">
+                                <button ng-click="confirmarBorrarCliente(p)" data-toggle="modal" data-target="#BorrarCliente" title="Borrar cliente">
                                     <i class="fa fa-trash-o"></i>
                                 </button>
                             </td>
                         </tr>
                     </table>
-                    <!-- abecedario -->
+                    <!-- filtro por abecedario -->
                     <table class="alfabeto">
                         <tr>
-                            <td ng-repeat="n in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')">
-                                <a ng-click="buscar={nombre:'{{n}}'}">{{n}}</a>
+                            <td ng-repeat="n in alphabet">
+                                <a ng-click="setLetters(n)">{{n}}</a>
                             </td>
                         </tr>
                     </table>
@@ -286,11 +292,11 @@
                 <h4 class="modal-title" id="myModalLabel">Confirmar</h4>
             </div>
             <div class="modal-body">
-                ¿Está seguro de que desea <b>borrar</b> el item {{idClienteBorrar}}?
+                ¿Está seguro de que desea <b>borrar</b> el cliente {{cliente_borrar.nombre}} {{cliente_borrar.apellido}}?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" ng-click="borrarCliente(idClienteBorrar)">Borrar</button>
+                <button type="button" class="btn btn-primary" ng-click="borrarCliente()">Borrar</button>
             </div>
         </div>
     </div>
@@ -309,6 +315,23 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" ng-click="borrarSeleccionados()">Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal para la calculadora -->
+<div id="Calculadora" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <i class="fa fa-calculator"></i><h4 class="modal-title" id="myModalLabel">Calculadora</h4>
+            </div>
+            <div class="modal-body">
+                <div calc></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
