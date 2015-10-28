@@ -35,18 +35,9 @@ angular.module('clientesApp')
         cargar_ejemplo: function(json) {
             debugger;
             return req('GET', '', json);
+        },
+        grabar_ejemplo: function(json) {
+            return req('POST', '', json);
         }
-        /*
-        cargar_ejemplo: function(json){
-            debugger;
-            $http.get(json).success(function (data) {
-                return data;
-            })
-            .error(function (data, status, headers, config) {
-                debugger;
-                console.log("dio error");
-            });
-        }
-        */
     };
   });

@@ -20,6 +20,7 @@ angular.module('clientesApp')
         $scope.searchFish   = '';     // set the default search/filter term
         //
         // cargo datos de ejemplo desde un archivo json
+        // no funciona
         $scope.ejemplo = function(){
             debugger;
             Clientes.cargar_ejemplo($rootScope.config.archivo_ejemplo).then(function(res){
@@ -49,18 +50,17 @@ angular.module('clientesApp')
                 toastr.success('Se crearon '+$scope.clientes.length+' clientes de ejemplo','Actualizar Cliente');
                 $scope.listarClientes();
             });
-            // lo hice asi porque no sabia como implementarlo en factory la carga de un archivo json
-            /*
-            $http.get($rootScope.config.archivo_ejemplo).success(function(data) {
-                debugger;
-                console.log("datos de ejemplo cargados");
-            })
-            .error(function (data, status, headers, config) {
-                debugger;
-                console.log("dio error");
+        }
+        // no funciona
+        $scope.ejemplo2 = function(){
+            Clientes.grabar_ejemplo($rootScope.config.archivo_ejemplo).then(function(){
+                $scope.listarClientes();
             });
-            debugger;
-            if(data){ 
+        }
+        // esta funciona
+        $scope.ejemplo3 = function() {
+            // lo hice asi porque no sabia como implementarlo en factory la carga de un archivo json
+            $http.get($rootScope.config.archivo_ejemplo).success(function(data) {
                 // debo borrar los registros existentes en la base de datos
                 debugger;
                 angular.forEach($scope.clientes, function(value){
@@ -86,15 +86,12 @@ angular.module('clientesApp')
                 });
                 toastr.success('Se crearon '+$scope.clientes.length+' clientes de ejemplo','Actualizar Cliente');
                 $scope.listarClientes();
-            }
-            */
+            })
+            .error(function (data, status, headers, config) {
+                debugger;
+                console.log("dio error");
+            });
         }
-        /*
-        $scope.setLetters = function(from, to){
-            $scope.fromLetter = from;
-            $scope.toLetter = to;
-        }
-        */
         $scope.setLetters = function(letter) {
             $scope.buscar = letter;
         }
@@ -232,9 +229,9 @@ angular.module('clientesApp')
         });
         hotkeys.add({
             combo: 'l',
-            description: 'Cargo datos json desde archivo',
+            description: 'Carga clientes desde archivo json',
             callback: function() {
-                $scope.ejemplo();
+                $scope.ejemplo3();
             }
         });
         //$('#Calculadora').css('width', '300px');
