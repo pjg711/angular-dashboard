@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'toastr',
-    'cfp.hotkeys'
+    'cfp.hotkeys',
+    'ngMessages'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -33,6 +34,7 @@ angular
       $rootScope.layout = {};
       $rootScope.layout.loading = true;
       $rootScope.config = {};
+      $rootScope.config.archivo_ejemplo = 'views/ejemplo.json';
       $rootScope.config.service_url = 'http://localhost:9001';
       $rootScope.config.base_url = '';
       $rootScope.config.base_url += $location.protocol()+'://';

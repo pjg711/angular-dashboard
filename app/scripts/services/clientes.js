@@ -31,6 +31,10 @@ angular.module('clientesApp')
         },
         borrar: function(idCliente){
             return req('DELETE','/'+idCliente, []);
+        },
+        cargar_ejemplo: function(json) {
+            debugger;
+            return req('GET', '', json);
         }
         /*
         cargar_ejemplo: function(json){

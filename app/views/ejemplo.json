@@ -1,4 +1,6 @@
-[{ "id":1, "isselected":false, "nombre":"Pablo", "apellido":"Garcia", "direccion":"Pasco 749 Depto A", "telefono":"123456789" },
- { "id":2, "isselected":false, "nombre":"Sonia", "apellido":"Garcia", "direccion":"Genova y Alberdi", "telefono":"1245780000" },
- { "id":3, "isselected":false, "nombre":"Javier", "apellido":"Garcia", "direccion":"Olive y Casiano Casas", "telefono":"444455555" },
- { "id":4, "isselected":false, "nombre":"Pedro", "apellido":"Picapiedra", "direccion":"5ta Roca", "telefono":"12312123132" }]
+[{ "isselected":false, "nombre":"Pablo", "apellido":"Garcia", "direccion":"Pasco 749 Depto A", "telefono":"123456789", "email":"pablo.ju.garcia@gmail.com" },
+ { "isselected":false, "nombre":"Sonia", "apellido":"Garcia", "direccion":"Genova y Alberdi", "telefono":"1245780000", "email":"sonia.garcia@gmail.com" },
+ { "isselected":false, "nombre":"Javier", "apellido":"Garcia", "direccion":"Olive y Casiano Casas", "telefono":"444455555", "email":"javier.garcia@gmail.com" },
+ { "isselected":false, "nombre":"Pedro", "apellido":"Picapiedra", "direccion":"5ta Roca", "telefono":"12312123132", "email":"pedro@picapiedra.com" },
+ { "isselected":false, "nombre":"Montoto", "apellido":"Flores", "direccion":"Lejos 321", "telefono":"123121342343132", "email":"montoto@flores.com.ar" },
+ { "isselected":false, "nombre":"Mengano", "apellido":"Pellegrini", "direccion":"Av Pellegrini y Juan Manuel de Rosas", "telefono":"888888882", "email":"mengano@pellegrini.com.ar" }]

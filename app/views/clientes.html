@@ -40,7 +40,7 @@
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="col-md-12">
-                    <!-- <pre class="hide">{{nuevocliente.nombre | json}}</pre> -->
+                    <pre class="hide">{{nuevocliente.nombre | json}}</pre>
                     <!-- insert form ends -->
                     <!-- list starts -->
                     <table class="table table-bordered table-striped">
@@ -53,6 +53,12 @@
                                         <span ng-show="sortType == 'nombre' && !sortReverse" class="fa fa-caret-down"></span>
                                         <span ng-show="sortType == 'nombre' && sortReverse" class="fa fa-caret-up"></span>
                                     </a>
+                                </td>
+                                <td>
+                                    <div ng-hide="editarDatos[0]"></div>
+                                    <div ng-show="editarDatos[0]">
+                                        Email
+                                    </div>
                                 </td>
                                 <td>
                                     <div ng-hide="editarDatos[0]"></div>
@@ -71,7 +77,7 @@
                             </tr>
                         </thead>
                         <tr ng-repeat="p in clientes | orderBy:sortType:sortReverse | filter: buscar">
-                            <td class="seleccion">
+                            <td align="center">
                                 <input type="checkbox" ng-model="p.isselected"/>
                             </td>
                             <td>
@@ -85,17 +91,6 @@
                                                     ng-minlength="3" 
                                                     ng-maxlength="50"
                                                     required />
-                                                <div role="alert" ng-if="p.nombre.$touched || p.$submitted">
-                                                    <span class="error" ng-show="editarcliente.nombre.$error.required">
-                                                        El nombre es requerido!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.nombre.$error.minlength">
-                                                        Nombre demasiado corto!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.nombre.$error.maxlength">
-                                                        Nombre demadiado largo!
-                                                    </span>
-                                                </div>
                                             </td>
                                             <td>
                                                 <input type="text" name="apellido" ng-model="p.apellido" class="form-control" 
@@ -103,38 +98,42 @@
                                                     ng-minlength="3" 
                                                     ng-maxlength="50" 
                                                     required />
-                                                <div role="alert" ng-if="p.apellido.$touched || p.$submitted">
-                                                    <span class="error" ng-show="editarcliente.apellido.$error.required">
-                                                        El apellido es requerido!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.apellido.$error.minlength">
-                                                        Apellido demasiado corto!
-                                                    </span>
-                                                    <span class="error" ng-show="editarcliente.apellido.$error.maxlength">
-                                                        Apellido demadiado largo!
-                                                    </span>
-                                                </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </td>
+                            <!-- email -->
+                            <td>
+                                <div ng-hide="editarDatos[p.id]"></div>
+                                <div ng-show="editarDatos[p.id]">
+                                    <input type="text" name="email" ng-model="p.email" class="form-control" 
+                                       ng-value="p.email"  
+                                       ng-minlength="8" 
+                                       ng-maxlength="100" 
+                                       required />
+                                </div>
+                            </td>
+                            <!-- direccion -->
                             <td>
                                 <div ng-hide="editarDatos[p.id]"></div>
                                 <div ng-show="editarDatos[p.id]">
                                     <input type="text" name="direccion" ng-model="p.direccion" class="form-control" 
                                        ng-value="p.direccion"  
-                                       ng-minlength="3" 
-                                       ng-maxlength="50" />
+                                       ng-minlength="8" 
+                                       ng-maxlength="50" 
+                                       required />
                                 </div>
                             </td>
+                            <!-- telefono -->
                             <td>
                                 <div ng-hide="editarDatos[p.id]">{{p.telefono}}</div>
                                 <div ng-show="editarDatos[p.id]">
                                     <input type="text" name="telefono" ng-model="p.telefono" class="form-control" 
                                        ng-value="p.telefono"  
-                                       ng-minlength="8" 
-                                       ng-maxlength="20" />
+                                       ng-minlength="6" 
+                                       ng-maxlength="20" 
+                                       required />
                                 </div>
                             </td>
                             <td>
@@ -185,26 +184,11 @@
                             ng-maxlength="50" 
                             ng-size="100"
                             required />
-                        <div role="alert" ng-if="nuevocliente.nombre.$touched || nuevocliente.$submitted">
-                            <span class="error" ng-show="nuevocliente.nombre.$error.required">
-                                El nombre es requerido!
-                            </span>
-                            <span class="error" ng-show="nuevocliente.nombre.$error.minlength">
-                                Nombre demasiado corto!
-                            </span>
-                            <span class="error" ng-show="nuevocliente.nombre.$error.maxlength">
-                                Nombre demadiado largo!
-                            </span>
-                        </div>
-                        <!--
-                        <div class="validation text-danger"
-                            ng-messages="nuevocliente.nombre.$error"
-                            ng-if="nuevocliente.nombre.$touched || nuevocliente.$submitted">
-                            <div ng-message="required" ng-show="nuevocliente.nombre.$error.required">Este campo es requerido</div>
-                            <div ng-message="minlength" ng-show="nuevocliente.nombre.$error.minlength">El nombre debe tener al menos 3 caracteres</div>
-                            <div ng-message="maxlength" ng-show="nuevocliente.apellido.$error.maxlength">El apellido debe tener hasta 50 caracteres</div>
-                        </div>
-                        -->
+                        <div class="help-block" ng-messages="nuevocliente.nombre.$error" ng-if="nuevocliente.nombre.$touched || nuevocliente.$submitted">
+                            <p ng-message="minlength">Nombre demasiado corto! Debe tener al menos 3 caracteres.</p>
+                            <p ng-message="maxlength">Nombre demasiado largo! Debe tener hasta 50 caracteres.</p>
+                            <p ng-message="required">El nombre es requerido!</p>
+                        </div>                        
                     </div>
                     <!-- apellido -->
                     <div class="form-group" ng-class="{'has-error': nuevocliente.apellido.$invalid && nuevocliente.$dirty }">
@@ -213,65 +197,50 @@
                            ng-minlength="3" 
                            ng-maxlength="50" 
                            required />
-                        <div role="alert" ng-if="nuevocliente.apellido.$touched || nuevocliente.$submitted">
-                            <span class="error" ng-show="nuevocliente.nombre.$error.required">
-                                El apellido es requerido!
-                            </span>
-                            <span class="error" ng-show="nuevocliente.nombre.$error.minlength">
-                                Apellido demasiado corto!
-                            </span>
-                            <span class="error" ng-show="nuevocliente.nombre.$error.maxlength">
-                                Apellido demadiado largo!
-                            </span>
-                        </div>
-                        <!--
-                        <div class="validation text-danger"
-                            ng-messages="nuevocliente.apellido.$error"
-                            ng-if="nuevocliente.apellido.$touched || nuevocliente.$submitted">
-                            <div ng-message="required" ng-show="nuevocliente.apellido.$error.required">Este campo es requerido</div>
-                            <div ng-message="minlength" ng-show="nuevocliente.apellido.$error.minlength">El apellido debe tener al menos 3 caracteres</div>
-                            <div ng-message="maxlength" ng-show="nuevocliente.apellido.$error.maxlength">El apellido debe tener hasta 50 caracteres</div>
-                        </div>
-                        -->
+                        <div class="help-block" ng-messages="nuevocliente.apellido.$error" ng-if="nuevocliente.apellido.$touched || nuevocliente.$submitted">
+                            <p ng-message="minlength">Apellido demasiado corto! Debe tener al menos 3 caracteres.</p>
+                            <p ng-message="maxlength">Apellido demasiado largo! Debe tener hasta 50 caracteres.</p>
+                            <p ng-message="required">El apellido es requerido!</p>
+                        </div>                        
                     </div>
                     <!-- direccion -->
                     <div class="form-group" ng-class="{'has-error': nuevocliente.direccion.$invalid && nuevocliente.$dirty }">
                         <input type="text" name="direccion" ng-model="di" class="form-control" 
                            placeholder="Dirección..."  
                            ng-minlength="8" 
-                           ng-maxlength="50" />
-                        <div role="alert" ng-if="nuevocliente.direccion.$touched || nuevocliente.$submitted">
-                            <span class="error" ng-show="nuevocliente.direccion.$error.minlength">
-                                Dirección demasiado corta! Debe contener mas de 7 caracteres.
-                            </span>
-                            <span class="error" ng-show="nuevocliente.direccion.$error.maxlength">
-                                Dirección demasiado larga! Debe contener hasta 50 caracteres
-                            </span>
-                        </div>
+                           ng-maxlength="50" 
+                           required />
+                        <div class="help-block" ng-messages="nuevocliente.direccion.$error" ng-if="nuevocliente.direccion.$touched || nuevocliente.$submitted">
+                            <p ng-message="minlength">Dirección demasiado corta! Debe tener al menos 8 caracteres.</p>
+                            <p ng-message="maxlength">Dirección demasiado larga! Debe tener hasta 50 caracteres.</p>
+                            <p ng-message="required">La dirección es requerida!</p>
+                        </div>                        
                     </div>
                     <!-- email -->
                     <div class="form-group" ng-class="{'has-error': nuevocliente.email.$invalid && nuevocliente.$dirty }">
                         <input type="email" name="email" ng-model="em" class="form-control" 
                            placeholder="E-Mail..."  
-                           ng-minlength="3" 
-                           ng-maxlength="50" />
-                        <div class="validation text-danger"
-                            ng-messages="nuevocliente.email.$error"
-                            ng-if="nuevocliente.email.$touched || nuevocliente.$submitted">
-                            <div ng-message="minlength" ng-show="nuevocliente.email.$error.minlength">El email debe tener al menos 3 caracteres</div>
-                            <div ng-message="email" ng-show="nuevocliente.email.$error.email">No es un email valido</div>
-                        </div>
+                           ng-minlength="8" 
+                           ng-maxlength="100" 
+                           required />
+                        <div class="help-block" ng-messages="nuevocliente.email.$error" ng-if="nuevocliente.email.$touched">
+                            <p ng-message="minlength">El email es demasiado corto! Debe tener al menos 8 caracteres.</p>
+                            <p ng-message="maxlength">El email es demasiado largo! Debe tener hasta 50 caracteres.</p>
+                            <p ng-message="required">El email es requerida!</p>
+                            <p ng-message="valid">El email no es valido</p>
+                        </div>    
                     </div>
                     <!-- telefono -->
                     <div class="form-group" ng-class="{'has-error': nuevocliente.telefono.$invalid && nuevocliente.$dirty }">
                         <input type="text" name="telefono" ng-model="te" class="form-control" 
                            placeholder="Teléfono..."  
-                           ng-minlength="8" 
-                           ng-maxlength="20" />
-                        <div class="validation text-danger"
-                            ng-messages="nuevocliente.telefono.$error"
-                            ng-if="nuevocliente.telefono.$touched || nuevocliente.$submitted">
-                            <div ng-message="minlength" ng-show="nuevocliente.telefono.$error.minlength">El teléfono debe tener al menos 3 caracteres</div>
+                           ng-minlength="6" 
+                           ng-maxlength="20" 
+                           required />
+                        <div class="help-block" ng-messages="nuevocliente.telefono.$error" ng-if="nuevocliente.telefono.$touched">
+                            <p ng-message="minlength">Teléfono demasiado corto! Debe tener al menos 6 caracteres.</p>
+                            <p ng-message="maxlength">Teléfono demasiado largo! Debe tener hasta 20 caracteres.</p>
+                            <p ng-message="required">El teléfono es requerida!</p>
                         </div>
                     </div>
                 </div>

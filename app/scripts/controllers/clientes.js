@@ -21,12 +21,51 @@ angular.module('clientesApp')
         //
         // cargo datos de ejemplo desde un archivo json
         $scope.ejemplo = function(){
-            // lo hice asi porque no sabia como implementarlo en factory la carga de un archivo json
-            $http.get('views/ejemplo.json').success(function(data) {
-                //debugger;
-                // debo borrar la base de datos
+            debugger;
+            Clientes.cargar_ejemplo($rootScope.config.archivo_ejemplo).then(function(res){
+                debugger;
+                console.log("Datos json de ejemplo--->",res);
                 angular.forEach($scope.clientes, function(value){
                     Clientes.borrar(value.id).then(function(res){
+                        debugger;
+                        console.log("Cliente con id="+value.id+" en seleccion múltiple borrado");
+                    });
+                });
+                // agrego nuevos
+                $scope.clientes = res.data;
+                angular.forEach($scope.clientes, function(value){
+                    var dataCliente = {
+                        nombre: value.nombre,
+                        apellido: value.apellido,
+                        direccion: value.direccion,
+                        email: value.email,
+                        telefono: value.telefono
+                    };
+                    debugger;
+                    Clientes.crear(dataCliente).then(function(res){
+                        console.log("Se creó cliente "+value.nombre+" "+value.apellido);
+                    });
+                });
+                toastr.success('Se crearon '+$scope.clientes.length+' clientes de ejemplo','Actualizar Cliente');
+                $scope.listarClientes();
+            });
+            // lo hice asi porque no sabia como implementarlo en factory la carga de un archivo json
+            /*
+            $http.get($rootScope.config.archivo_ejemplo).success(function(data) {
+                debugger;
+                console.log("datos de ejemplo cargados");
+            })
+            .error(function (data, status, headers, config) {
+                debugger;
+                console.log("dio error");
+            });
+            debugger;
+            if(data){ 
+                // debo borrar los registros existentes en la base de datos
+                debugger;
+                angular.forEach($scope.clientes, function(value){
+                    Clientes.borrar(value.id).then(function(res){
+                        debugger;
                         console.log("Cliente con id="+value.id+" en seleccion múltiple borrado");
                     });
                 });
@@ -40,16 +79,15 @@ angular.module('clientesApp')
                         email: value.email,
                         telefono: value.telefono
                     };
+                    debugger;
                     Clientes.crear(dataCliente).then(function(res){
                         console.log("Se creó cliente "+value.nombre+" "+value.apellido);
                     });
                 });
-                toastr.success('Se cargaron '+$scope.clientes.length+' clientes de ejemplo','Actualizar Cliente');
-            })
-            .error(function (data, status, headers, config) {
-                debugger;
-                console.log("dio error");
-            });
+                toastr.success('Se crearon '+$scope.clientes.length+' clientes de ejemplo','Actualizar Cliente');
+                $scope.listarClientes();
+            }
+            */
         }
         /*
         $scope.setLetters = function(from, to){
@@ -84,9 +122,9 @@ angular.module('clientesApp')
             $scope.cliente_borrar = clie;
         }
         $scope.borrarCliente = function() {
-            debugger;
+            //debugger;
             Clientes.borrar($scope.cliente_borrar.id).then(function(res){
-                debugger;
+                //debugger;
                 toastr.success('Se borró el cliente '+$scope.cliente_borrar.nombre+' '+$scope.cliente_borrar.apellido,'Borrar Cliente');
                 console.log("Cliente borrado");
                 $('#BorrarCliente').modal('hide');
@@ -97,11 +135,8 @@ angular.module('clientesApp')
         $scope.borrarSeleccionados = function() {
             var borrados = false;
             angular.forEach($scope.clientes, function(value){
-                //debugger;
                 if (value.isselected) {
-                    //debugger;
                     Clientes.borrar(value.id).then(function(res){
-                        //debugger;
                         console.log("Cliente "+value.nombre+" "+value.apellido+" en seleccion múltiple borrado");
                         borrados=true;
                     });
@@ -110,16 +145,17 @@ angular.module('clientesApp')
             });
             if(borrados===true){
                 toastr.success('Se borraron todos los clientes seleccionados','Borrar Selección');
-                $('#BorrarSeleccionados').modal('hide');
-                $scope.listarClientes();
             }
+            $('#BorrarSeleccionados').modal('hide');
+            $scope.listarClientes();
         }
         // ------------------------------------------------------------------------------------
         // listar los clientes
         $scope.listarClientes = function(){
             Clientes.listar().then(function(res){
-                console.log("Lectura exitosa!", res);
+                console.log("Lectura exitosa de "+res.data.length+" clientes!", res);
                 $scope.clientes = res.data;
+                //debugger;
             }, function(){
                 console.log("error!"); 
             });
